@@ -4,7 +4,7 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-gray-100 flex justify-center items-center font-sans">
       <div className="relative w-full max-w-[1140px] px-4">
-        <div className="mt-8 px-6 py-6 bg-white rounded-[8px] shadow-sm text-gray-700">
+        <div className="my-8 px-6 py-6 bg-white rounded-[8px] shadow-sm text-gray-700">
           <p>Welcome to the Fillout Assessment Project.</p>
           <p>The project will demonstrate the following objectives:</p>
           <ul className="list-disc list-inside mt-2 space-y-1">

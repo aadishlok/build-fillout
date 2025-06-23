@@ -22,7 +22,7 @@ const Button: React.FC<IButtonProps> = ({
         ${hideText ? "w-4 h-4" : "w-[106.5px] h-[32px] px-[10px] py-[4px] gap-[6px]"}
         flex items-center justify-center
         bg-white border border-[#E1E1E1]
-        rounded-full ${!hideText ? "rounded-[8px]" : ""}
+        ${hideText ? "rounded-full" : "rounded-[8px]"}
         shadow-[0px_1px_3px_0px_rgba(0,0,0,0.04),_0px_1px_1px_0px_rgba(0,0,0,0.02)]
         text-[#1A1A1A] text-sm font-medium
         transition-colors hover:bg-gray-50

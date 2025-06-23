@@ -58,7 +58,7 @@ const MenuItem = ({itemId, Icon, text, isSelected, onSelect}: IMenuItem) => {
                         `} 
                         size="16px" 
                     />
-                    <span className="whitespace-nowrap overflow-hidden text-ellipsis">{text}</span>
+                    <span className="max-w-[80px] truncate block">{text}</span>
                 </div>
 
                 {isSelected && <SettingsButton anchorRef={containerRef} />}

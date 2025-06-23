@@ -5,6 +5,7 @@ import {
   DndContext,
   closestCenter,
   PointerSensor,
+  TouchSensor,
   useSensor,
   useSensors,
   DragEndEvent,
@@ -12,11 +13,10 @@ import {
 import {
   SortableContext,
   arrayMove,
-  horizontalListSortingStrategy,
+  rectSortingStrategy,
 } from "@dnd-kit/sortable";
 import SortableMenuItem from "../SortableMenuItem/sortableMenuItem";
 import { v4 as uuidv4 } from 'uuid';
-import { restrictToHorizontalAxis } from "@dnd-kit/modifiers";
 import Button from "../Button/button";
 import Connector from "../Connector/connector";
 import { IMenuItem } from "@/types";
@@ -24,11 +24,12 @@ import { INITIAL_PAGES } from "@/constants";
 
 const MenuBar = () => {
 
-    const [selectedPageIndex, setSelectedPageIndex] = useState<number>(0);
+    const [selectedItemId, setSelectedItemId] = useState<string | null>(null);
     const [pages, setPages] = useState<IMenuItem[]>(INITIAL_PAGES);
 
     const insertPageAtIndex = (index: number) => {
-        const newPage: IMenuItem = { itemId: uuidv4(), Icon: FileText, text: "New Page" };
+        const newPageCount = pages.filter(page => page.text.startsWith("New Page")).length + 1;
+        const newPage: IMenuItem = { itemId: uuidv4(), Icon: FileText, text: "New Page " + newPageCount };
         setPages(prevPages => {
             const updated = [...prevPages];
             updated.splice(index, 0, newPage);
@@ -40,6 +41,12 @@ const MenuBar = () => {
         useSensor(PointerSensor, {
             activationConstraint: {
                 distance: 5,
+            },
+        }),
+        useSensor(TouchSensor, {
+            activationConstraint: {
+                delay: 150,
+                tolerance: 5,
             },
         })
     );
@@ -54,16 +61,16 @@ const MenuBar = () => {
     };
     
     const menuBarClasses = `
-        w-full max-w-[1140px] h-[72px] p-5 bg-gray-50
+        w-full max-w-[1140px] min-h-[72px] h-auto p-5 bg-gray-50
         border-t-[0.5px] border-gray-200 rounded-[8px]
         shadow-[0px_1px_3px_0px_rgba(0,0,0,0.039),_0px_1px_1px_0px_rgba(0,0,0,0.019)]
-        flex items-center
+        flex flex-wrap items-center gap-y-3
     `;
     
     return (
         <div className={menuBarClasses}>
-            <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd} modifiers={[restrictToHorizontalAxis]}>
-                <SortableContext items={pages.map(p => p.itemId)} strategy={horizontalListSortingStrategy}>
+            <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
+                <SortableContext items={pages.map(p => p.itemId)} strategy={rectSortingStrategy}>
                     {pages.map((page, index) => (
                         <React.Fragment key={page.text}>
                             <SortableMenuItem
@@ -71,8 +78,8 @@ const MenuBar = () => {
                                 itemId={page.itemId}
                                 Icon={page.Icon}
                                 text={page.text}
-                                isSelected={index === selectedPageIndex}
-                                onSelect={() => setSelectedPageIndex(index)}
+                                isSelected={page?.itemId === selectedItemId}
+                                onSelect={() => setSelectedItemId(page?.itemId)}
                             />
                             <div className="relative group flex items-center transition-all duration-200">
                                 <Connector hideOnHover />
