@@ -24,7 +24,7 @@ import { INITIAL_PAGES } from "@/constants";
 
 const MenuBar = () => {
 
-    const [selectedItemId, setSelectedItemId] = useState<string | null>(null);
+    const [selectedItemId, setSelectedItemId] = useState<string | null>(INITIAL_PAGES[0]?.itemId);
     const [pages, setPages] = useState<IMenuItem[]>(INITIAL_PAGES);
 
     const insertPageAtIndex = (index: number) => {
